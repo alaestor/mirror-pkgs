@@ -9,12 +9,12 @@
     }:
     let
       pname = "helium-browser";
-      version = "0.13.4.1";
+      version = "0.14.5.1";
 
       sources = {
         x86_64-linux = {
           url = "https://github.com/imputnet/helium-linux/releases/download/${version}/helium-${version}-x86_64.AppImage";
-          hash = "sha256-z23up+T6bj6F+cQslmI92bEksIAw1OQHRIrmQSaaxY8=";
+          hash = "sha256-JM4Tm4Le9Xcfq3fFMEu/DIK6817FEgBQ2rSwY093F04=";
         };
       };
 
@@ -32,14 +32,16 @@
     in
     {
       packages.helium-browser =
-        lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux pkgs.appimageTools.wrapType2
-          {
-            inherit
-              pname
-              version
-              src
-              meta
-              ;
-          };
+        lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux pkgs.appimageTools.wrapType2 {
+          inherit
+            pname
+            version
+            src
+            meta
+            ;
+        }
+        // {
+          passthru.updateScript = pkgs.nix-update-script { };
+        };
     };
 }

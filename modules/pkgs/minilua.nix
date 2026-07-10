@@ -32,6 +32,7 @@
 
       meta = with pkgs.lib; {
         description = "MiniLua";
+        homepage = "https://github.com/aradooo/MiniLua";
         license = licenses.mit;
       };
     };

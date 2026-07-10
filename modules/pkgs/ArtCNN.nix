@@ -3,13 +3,13 @@
   perSystem = { pkgs, ... }: {
     packages.ArtCNN = pkgs.stdenvNoCC.mkDerivation rec {
       pname = "ArtCNN";
-      version = "1.4.2";
+      version = "1.6.2";
 
       src = pkgs.fetchFromGitHub {
         owner = "Artoriuz";
         repo = pname;
         rev = "v${version}";
-        hash = "sha256-KbgMyY7WOgnBFTMPsDUbQQopwZFMyPCTkHSOCCRNCQ8=";
+        hash = "sha256-S1CimvDxjBr0TLeCq9791dPq22bwiecRQe3IagKlGjg=";
         sparseCheckout = [ "GLSL/" ];
       };
 
@@ -20,10 +20,6 @@
         mkdir -p $out/share/${pname}
         cp -r ${src + "/GLSL"} $out/share/${pname}
       '';
-
-      passthru.updateScript = pkgs.gitUpdater {
-        rev-prefix = "v";
-      };
 
       meta = with pkgs.lib; {
         description = "A collection of simple SISR CNNs aimed at anime content";

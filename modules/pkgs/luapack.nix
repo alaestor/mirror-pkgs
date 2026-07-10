@@ -17,6 +17,7 @@
         inherit pname version src;
         cargoLock.lockFile = "${src}/Cargo.lock";
         doCheck = false;
+
         meta = with pkgs.lib; {
           description = "A basic rust application for efficiently bundling Lua scripts into monolithic releases.";
           homepage = "https://github.com/the-unnamed-goose/luapack";

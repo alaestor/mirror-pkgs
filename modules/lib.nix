@@ -1,5 +1,7 @@
 {
+  config,
   lib,
+  fetchFromGitea,
   ...
 }:
 {
@@ -13,7 +15,13 @@
 
   };
 
+  config.flake._module.args.fetchFromCodeberg = config.self.lib.fetchFromCodeberg;
+
   config.flake.lib = {
+
+    fetchFromCodeberg = lib.makeOverridable (
+      args: fetchFromGitea ({ domain = "codeberg.org"; } // args)
+    );
 
     /*
       Build a derivation for a single-file mpv script fetched from GitHub.
@@ -21,8 +29,7 @@
       Type: mkMpvScript :: pkgs -> AttrSet -> Derivation
 
       Parameters:
-        - pname, version, owner, repo, rev, hash: standard fetcher args
-        - sparseCheckout: list of paths for sparse checkout (should include the script file)
+        - pname, version, src: standard fetcher args
         - scriptName: filename of the script (e.g. "clipboard.lua")
         - meta: standard meta attrset
         - updater: passthru updateScript (unstableGitUpdater or gitUpdater)
@@ -34,11 +41,7 @@
       {
         pname,
         version,
-        owner,
-        repo,
-        rev,
-        hash,
-        sparseCheckout,
+        src,
         scriptName,
         meta,
         updater,
@@ -46,17 +49,7 @@
         ...
       }:
       pkgs.stdenvNoCC.mkDerivation rec {
-        inherit pname version;
-
-        src = pkgs.fetchFromGitHub {
-          inherit
-            owner
-            repo
-            rev
-            hash
-            sparseCheckout
-            ;
-        };
+        inherit pname version src;
 
         dontBuild = true;
         dontUnpack = true;

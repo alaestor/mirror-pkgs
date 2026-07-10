@@ -4,11 +4,13 @@
     packages.mpv-cycleCommands = config.flake.lib.mkMpvScript pkgs {
       pname = "mpv-cycleCommands";
       version = "0-unstable-2025-07-18";
-      owner = "CogentRedTester";
-      repo = "mpv-scripts";
-      rev = "1ed52e31543cd838d827e724910aa261ee5ec1f3";
-      hash = "sha256-OMVRyoATn+cSEbrNeXK/YKUb2teaaNCpHj3KFLRSuNo=";
-      sparseCheckout = [ "cycle-commands.lua" ];
+      src = pkgs.fetchFromGitHub {
+        owner = "CogentRedTester";
+        repo = "mpv-scripts";
+        rev = "1ed52e31543cd838d827e724910aa261ee5ec1f3";
+        hash = "sha256-OMVRyoATn+cSEbrNeXK/YKUb2teaaNCpHj3KFLRSuNo=";
+        sparseCheckout = [ "cycle-commands.lua" ];
+      };
       scriptName = "cycle-commands.lua";
       updater = pkgs.unstableGitUpdater { };
       meta = with pkgs.lib; {

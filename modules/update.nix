@@ -193,6 +193,7 @@
       apps.update = {
         type = "app";
         program = "${updateApp}/bin/${scriptName}";
+        meta.description = "Intelligently try to run `nix-update` for every package in outputs.";
       };
     };
 }

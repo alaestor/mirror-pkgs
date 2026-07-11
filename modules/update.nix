@@ -44,6 +44,8 @@
         "bitbucket.org"
       ];
 
+      scriptName = "smart-updater";
+
       getHost =
         url:
         builtins.head (lib.splitString "/" (lib.removePrefix "http://" (lib.removePrefix "https://" url)));
@@ -77,7 +79,7 @@
       );
 
       updateApp = pkgs.writeShellApplication {
-        name = "update";
+        name = scriptName;
         runtimeInputs = [
           pkgs.coreutils
           pkgs.git
@@ -190,7 +192,7 @@
     {
       apps.update = {
         type = "app";
-        program = "${updateApp}/bin/update";
+        program = "${updateApp}/bin/${scriptName}";
       };
     };
 }

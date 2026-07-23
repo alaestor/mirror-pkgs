@@ -1,0 +1,44 @@
+diff --git a/headroom/cli/wrap.py b/headroom/cli/wrap.py
+index 94cbcf7..c7f4fd2 100644
+--- a/headroom/cli/wrap.py
++++ b/headroom/cli/wrap.py
+@@ -930,15 +930,13 @@ def _setup_lean_ctx_agent(agent: str, verbose: bool = False) -> Path | None:
+     try:
+-        with tempfile.TemporaryDirectory(prefix="headroom-lean-ctx-") as setup_cwd:
+-            # lean-ctx writes project-local files when initialized from a git
+-            # checkout. Run from a non-project directory so setup is limited to
+-            # home-scoped agent config such as ~/.codex or ~/.claude.
+-            result = run(
+-                [str(lean_ctx), "init", "--agent", agent],
+-                capture_output=True,
+-                text=True,
+-                timeout=30,
+-                cwd=setup_cwd,
+-            )
++        # lean-ctx 3.4.x configures agents with project-local files. Run in
++        # the wrapped project so those files survive setup.
++        result = run(
++            [str(lean_ctx), "init", "--agent", agent],
++            capture_output=True,
++            text=True,
++            timeout=30,
++            cwd=Path.cwd(),
++        )
+     except Exception as e:
+         click.echo(f"  lean-ctx setup failed — continuing without it: {e}")
+         return None
+@@ -949,6 +947,13 @@ def _setup_lean_ctx_agent(agent: str, verbose: bool = False) -> Path | None:
+         click.echo(f"  lean-ctx setup failed — continuing without it{suffix}")
+         return None
+-
++
++    # The managed binary lives under ~/.headroom/bin, which is not normally
++    # on PATH. Expose its resolved directory to the wrapped agent process.
++    lean_ctx_bin = str(lean_ctx.parent)
++    path_entries = os.environ.get("PATH", "").split(os.pathsep)
++    if lean_ctx_bin not in path_entries:
++        os.environ["PATH"] = os.pathsep.join([lean_ctx_bin, *path_entries])
++
+     if verbose:
+         detail = result.stdout.strip()
+         if detail:

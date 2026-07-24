@@ -84,6 +84,7 @@
           ":"
           (pkgs.lib.makeBinPath [
             pkgs.ast-grep
+            pkgs.nodejs
             pkgs.rtk
             pkgs.uv
           ])

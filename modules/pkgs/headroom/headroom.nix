@@ -45,13 +45,7 @@
         inherit pname version src;
         pyproject = true;
 
-        # "Good enough" local lean-ctx integration: force its prebuilt static
-        # musl release instead of packaging it, and let `init --agent codex`
-        # run in the repository so its output survives. The tradeoff is a
-        # runtime download plus extra project-local integration files for
-        # other agents (.claude/, .cursorrules, AGENTS.md, and LEAN-CTX.md).
         patches = [
-          ./headroom-lean-ctx.patch
           ./headroom-serena-config.patch
         ];
 
@@ -76,9 +70,6 @@
         # those bare Python subprocesses inherit the same environment as the
         # generated `headroom` entrypoint.
         makeWrapperArgs = [
-          "--set-default"
-          "HEADROOM_LEAN_CTX_TARGET"
-          "x86_64-unknown-linux-musl"
           "--prefix"
           "PATH"
           ":"

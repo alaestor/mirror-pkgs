@@ -1,0 +1,13 @@
+diff --git a/solidlsp/language_servers/yaml_language_server.py b/solidlsp/language_servers/yaml_language_server.py
+--- a/solidlsp/language_servers/yaml_language_server.py
++++ b/solidlsp/language_servers/yaml_language_server.py
+@@ -65,6 +65,10 @@ class YamlLanguageServer(SolidLanguageServer):
+             """
+             Setup runtime dependencies for YAML Language Server and return the command to start the server.
+             """
++            system_yaml_language_server = shutil.which("yaml-language-server")
++            if system_yaml_language_server is not None:
++                return system_yaml_language_server
++
+             # Verify both node and npm are installed
+             is_node_installed = shutil.which("node") is not None

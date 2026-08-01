@@ -1,5 +1,4 @@
 diff --git a/solidlsp/language_servers/bash_language_server.py b/solidlsp/language_servers/bash_language_server.py
-index bb11008..b61edda 100644
 --- a/solidlsp/language_servers/bash_language_server.py
 +++ b/solidlsp/language_servers/bash_language_server.py
 @@ -111,15 +111,22 @@ class BashLanguageServer(SolidLanguageServer):
@@ -34,5 +33,3 @@ index bb11008..b61edda 100644
 -                "SHELLCHECK_PATH": _shellcheck_binary_path(bash_ls_dir),
 +                "SHELLCHECK_PATH": shutil.which("shellcheck") or _shellcheck_binary_path(bash_ls_dir),
              }
- 
-         def _resolve_bash_ls_dir(self, bash_language_server_version: str) -> str:

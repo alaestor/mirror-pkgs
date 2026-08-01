@@ -9,7 +9,17 @@
   perSystem =
     { pkgs, system, ... }:
     let
+      # See README.md for the solidlsp dependency audit and patch policy.
       upstreamPackages = inputs.serena.packages.${system};
+      patches = [
+        ./prefer-packaged-bash-tools.patch
+        ./prefer-packaged-json-language-server.patch
+        ./prefer-packaged-marksman.patch
+        ./prefer-packaged-yaml-language-server.patch
+      ];
+      applyPatches = pkgs.lib.concatMapStringsSep "\n" (patchFile: ''
+        patch -d "$site_packages" -p1 < ${patchFile}
+      '') patches;
       patchedEnvironment = upstreamPackages.serena-env.overrideAttrs (old: {
         postFixup = (old.postFixup or "") + ''
           site_packages=$out/lib/python3.11/site-packages
@@ -18,7 +28,7 @@
           chmod --recursive u+w "$site_packages/solidlsp.mutable"
           rm "$site_packages/solidlsp"
           mv "$site_packages/solidlsp.mutable" "$site_packages/solidlsp"
-          patch -d "$site_packages" -p1 < ${./serena-prefer-packaged-bash-tools.patch}
+          ${applyPatches}
         '';
       });
       patchedSerena = upstreamPackages.serena.overrideAttrs (old: {
@@ -39,8 +49,12 @@
             --prefix PATH : ${
               pkgs.lib.makeBinPath [
                 pkgs.bash-language-server
+                pkgs.marksman
+                pkgs.nixd
                 pkgs.nodejs
                 pkgs.shellcheck
+                pkgs.vscode-langservers-extracted
+                pkgs.yaml-language-server
               ]
             }
         '';

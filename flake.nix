@@ -1,18 +1,33 @@
-# DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
-# Use `nix run .#write-flake` to regenerate it.
+# DO-NOT-EDIT. Generated from nucleus declarations.
 {
   description = "alpkgs";
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
+  outputs = inputs:
+  inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+    imports = [ ./nucleus/flake-module.nix ]
+      ++ import ./nucleus/list-modules.nix ./modules;
+  }
+;
 
   inputs = {
-    flake-file.url = "github:vic/flake-file";
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    import-tree.url = "github:denful/import-tree";
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    serena = {
-      url = "github:oraios/serena/v1.6.1";
-      inputs.nixpkgs.follows = "nixpkgs";
+  flake-parts = {
+    inputs = {
+      nixpkgs-lib = {
+        follows = "nixpkgs";
+      };
     };
+    url = "github:hercules-ci/flake-parts";
   };
+  nixpkgs = {
+    url = "github:nixos/nixpkgs?ref=nixos-unstable";
+  };
+  serena = {
+    inputs = {
+      nixpkgs = {
+        follows = "nixpkgs";
+      };
+    };
+    url = "github:oraios/serena/v1.6.1";
+  };
+};
 }

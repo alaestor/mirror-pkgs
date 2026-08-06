@@ -1,7 +1,7 @@
 { inputs, ... }:
 
 {
-  flake-file.inputs.serena = {
+  nucleus.inputs.serena = {
     url = "github:oraios/serena/v1.6.1";
     inputs.nixpkgs.follows = "nixpkgs";
   };

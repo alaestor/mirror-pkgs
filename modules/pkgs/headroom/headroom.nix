@@ -45,10 +45,6 @@
         inherit pname version src;
         pyproject = true;
 
-        patches = [
-          ./headroom-serena-config.patch
-        ];
-
         cargoDeps = pkgs.rustPlatform.importCargoLock {
           lockFile = "${src}/Cargo.lock";
         };

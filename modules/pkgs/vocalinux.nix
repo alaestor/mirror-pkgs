@@ -1,6 +1,6 @@
 { ... }:
 let
-  version = "0.14.2";
+  version = "0.15.0";
 in
 {
   perSystem = { lib, pkgs, self', ... }:
@@ -16,7 +16,7 @@ in
         owner = "jatinkrmalik";
         repo = "vocalinux";
         rev = "v${version}";
-        hash = "sha256-5hkcsqkiOE2ESxd6TtiHCKIO+43dF0CDKvA16QzvrnY=";
+        hash = "sha256-TYdgzKyH2mqRZrm6dyE45WEbS+4P5oP+OfUO0zQsVYk=";
       };
 
       build-system = with pkgs.python3Packages; [

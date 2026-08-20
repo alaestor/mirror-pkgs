@@ -20,6 +20,14 @@
     >   nix-update can't auto-detect (e.g. gist.github.com). For common
     >   hosts (GitHub, GitLab, etc.) nix-update handles detection itself.
     > - Passes `--version=branch` when the version contains `-unstable-`.
+    > - Passes `--version=unstable` when the version looks like a
+    >   pre-release (e.g. `-rc.N`, `-alpha`, `-beta`), matching
+    >   nix-update's own `is_unstable` heuristic, so it doesn't refuse to
+    >   update to a newer pre-release.
+    > - Passes `--version-regex <regex>` when a package sets
+    >   `passthru.updateVersionRegex`, for hosts that tag releases with a
+    >   non-version prefix (e.g. `dsh-v0.1.0-rc.8`) that nix-update can't
+    >   strip on its own.
   */
   perSystem =
     {
@@ -63,6 +71,12 @@
             useUpdateScript = hasUpdateScript && !isAutoDetectable;
             # Skip packages with no source URL (e.g. script-only wrappers).
             canUpdate = srcUrl != "" && (isAutoDetectable || hasUpdateScript);
+            version = lib.getVersion pkg;
+            # Mirrors nix-update's own `is_unstable` heuristic (see
+            # nix_update.version.is_unstable) so we preempt its refusal to
+            # update to a newer pre-release without an explicit flag.
+            isPrerelease = builtins.match ".*(alpha|beta|canary|m[0-9]+|nightly|prerelease|preview|rc).*" version != null;
+            versionRegex = pkg.passthru.updateVersionRegex or null;
           in
           if canUpdate then
             {
@@ -71,7 +85,12 @@
                 name
               ]
               ++ lib.optional useUpdateScript "--use-update-script"
-              ++ lib.optional (lib.hasInfix "-unstable-" (lib.getVersion pkg)) "--version=branch";
+              ++ lib.optional (lib.hasInfix "-unstable-" version) "--version=branch"
+              ++ lib.optional (!lib.hasInfix "-unstable-" version && isPrerelease) "--version=unstable"
+              ++ lib.optionals (versionRegex != null) [
+                "--version-regex"
+                versionRegex
+              ];
             }
           else
             null

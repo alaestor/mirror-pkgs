@@ -6,9 +6,8 @@
       pname = "lunar-bundler";
       version = "0.3.0";
       owner = "colourlabs";
-      src = pkgs.fetchFromGitHub {
-        inherit owner;
-        repo = pname;
+      src = pkgs.fetchgit {
+        url = "https://git.0x04.cc/alaestor/mirror-lunar-bundler";
         rev = "v${version}";
         hash = "sha256-jw+YcTSSbLisdNREbMuE1tLNj4W2JiybzqOn56wuOmQ=";
       };

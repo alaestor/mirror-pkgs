@@ -1,19 +1,17 @@
 { ... }:
 {
   perSystem =
-    { pkgs, fetchFromCodeberg, ... }:
+    { pkgs, ... }:
     let
       pname = "minilua";
       version = "1.1.0";
-      owner = "alaestor";
-      repo = "fork-MiniLua";
     in
     {
       packages.minilua = pkgs.python3.pkgs.buildPythonPackage {
         inherit pname version;
 
-        src = pkgs.fetchFromCodeberg {
-          inherit owner repo;
+        src = pkgs.fetchgit {
+          url = "https://git.0x04.cc/alaestor/fork-MiniLua";
           rev = "v${version}";
           hash = "sha256-vfE2mCe4QTdwowIAoCV6e9u5Xzj1EJEfemllIq6D1Xs=";
         };
@@ -39,7 +37,7 @@
         meta = with pkgs.lib; {
           description = "MiniLua";
           #homepage = "https://github.com/aradooo/MiniLua"; -- vanished?
-          homepage = "https://codeberg.org/alaestor/fork-MiniLua";
+          homepage = "https://git.0x04.cc/alaestor/fork-MiniLua";
           license = licenses.mit;
         };
       };

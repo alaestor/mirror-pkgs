@@ -4,19 +4,19 @@
     { pkgs, ... }:
     let
       pname = "deepseek-harness";
-      version = "0.1.0-rc.8";
+      version = "0.1.2-alpha.2";
 
       src = pkgs.fetchFromGitHub {
         owner = "deepseek-ai";
         repo = "deepseek-harness";
-        rev = "dsh-v0.1.0-rc.8";
-        hash = "sha256-FzToX43k6upXkwTxTYXHRK5IdatxibxeZgZBpuDE7S4=";
+        rev = "dsh-v0.1.2-alpha.2";
+        hash = "sha256-fDLyk09boJGNXVMOBnln2dY1ZSETXGpFBHUVqFBLRk4=";
       };
 
       pnpmDeps = pkgs.fetchPnpmDeps {
         inherit pname version src;
         fetcherVersion = 4;
-        hash = "sha256-+PsdK9u3ZKv4XtSc8tBKKP48J/95/CGTMIUf8Q8dbok=";
+        hash = "sha256-KK34f9oTm/ofvAR9VV/FGnR1jJAQUyFzQMz7a/Xv6VE=";
       };
     in
     {

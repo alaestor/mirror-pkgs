@@ -50,6 +50,7 @@
         "download.savannah.gnu.org"
         "git.sr.ht"
         "bitbucket.org"
+        "git.0x04.cc"
       ];
 
       scriptName = "smart-updater";

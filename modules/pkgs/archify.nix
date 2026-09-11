@@ -4,7 +4,7 @@
     { pkgs, ... }:
     let
       pname = "archify";
-      version = "2.17.0-dev.1";
+      version = "2.16.0";
       src = pkgs.fetchFromGitHub {
         owner = "tt-a1i";
         repo = "archify";

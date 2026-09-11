@@ -9,12 +9,12 @@
     }:
     let
       pname = "helium-browser";
-      version = "0.16.3.1";
+      version = "0.17.0.1";
 
       sources = {
         x86_64-linux = {
           url = "https://github.com/imputnet/helium-linux/releases/download/${version}/helium-${version}-x86_64.AppImage";
-          hash = "sha256-k3CjrF45s7SizRof/X9eOnPKwkOB9c1AvBSmjj7ROIM=";
+          hash = "sha256-JmqdEwoXP/2GGAMS2gjAq7G2oWFuyUTr5ouMDhSOcHY=";
         };
       };
 

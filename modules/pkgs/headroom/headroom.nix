@@ -4,13 +4,13 @@
     { pkgs, ... }:
     let
       pname = "headroom-ai";
-      version = "0.37.0-unstable-2026-09-10";
+      version = "0.37.0-unstable-2026-09-15";
 
       src = pkgs.fetchFromGitHub {
         owner = "headroomlabs-ai";
         repo = "headroom";
-        rev = "04cdf79ab0a8423d88148ba63e960ac6b4007b9c";
-        hash = "sha256-JxpBlNsbhHSUtwcGu0bW6dkJvHlk9shfE1GADoeTECY=";
+        rev = "9f32800b86ad277201c2a2ce75192534f8e94b03";
+        hash = "sha256-GtEqwWvKpLnvhB2S21C5H5od1C5R6nJOfDyShchwKf0=";
       };
 
       python = pkgs.python313;

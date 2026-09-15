@@ -108,6 +108,7 @@
         ];
         text = ''
           set -euo pipefail
+          export NIX_PATH=nixpkgs=${pkgs.path}
 
           verbose=0
           while [[ $# -gt 0 ]]; do

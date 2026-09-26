@@ -9,13 +9,13 @@
   perSystem =
     { pkgs, lib, ... }:
     let
-      version = "0-unstable-2026-09-15";
+      version = "0-unstable-2026-09-19";
       src = pkgs.fetchFromGitHub {
         owner = "andrewrabert";
         repo = "jellium-desktop";
-        rev = "b0a962d277c7bf71176fcf0c9e34a7d33ec1f5f7";
+        rev = "14dc0845981cb7c0aef5fa93ff539d927c8f0eb2";
         fetchSubmodules = true;
-        hash = "sha256-8D1oZdFuD5P6TAD99x3uaojMjCFUbnLExjD3w73upHc=";
+        hash = "sha256-vU7Fuw2gMvGdBBYEJ4ngu7cHayffEPdHswQA7NtNGj8=";
       };
 
       cefArchive = pkgs.fetchzip {
@@ -72,7 +72,7 @@
 
         cargoRoot = "src";
         buildAndTestSubdir = "src";
-        cargoHash = "sha256-h8rw/fFku/kE3/Fd0I0vh3cs14uRc0bjbbJP3k4uwEM=";
+        cargoHash = "sha256-viJZibewxf4rlOI0NpMgaF8NjbvVd27DRHTed0A77kk=";
         cargoBuildFlags = [ "--bin" "jellium-desktop" ];
         # Workspace tests try to execute CEF-linked binaries before CEF's
         # runtime library closure is wrapped; the upstream Nix flakes skip them too.

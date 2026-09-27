@@ -21,6 +21,28 @@
   nixpkgs = {
     url = "github:nixos/nixpkgs?ref=nixos-unstable";
   };
+  pyproject-build-systems = {
+    inputs = {
+      nixpkgs = {
+        follows = "nixpkgs";
+      };
+      pyproject-nix = {
+        follows = "pyproject-nix";
+      };
+      uv2nix = {
+        follows = "uv2nix";
+      };
+    };
+    url = "github:pyproject-nix/build-system-pkgs";
+  };
+  pyproject-nix = {
+    inputs = {
+      nixpkgs = {
+        follows = "nixpkgs";
+      };
+    };
+    url = "github:pyproject-nix/pyproject.nix";
+  };
   serena = {
     inputs = {
       nixpkgs = {
@@ -28,6 +50,17 @@
       };
     };
     url = "github:oraios/serena/v1.6.1";
+  };
+  uv2nix = {
+    inputs = {
+      nixpkgs = {
+        follows = "nixpkgs";
+      };
+      pyproject-nix = {
+        follows = "pyproject-nix";
+      };
+    };
+    url = "github:pyproject-nix/uv2nix";
   };
 };
 }

@@ -28,6 +28,8 @@
     >   `passthru.updateVersionRegex`, for hosts that tag releases with a
     >   non-version prefix (e.g. `dsh-v0.1.0-rc.8`) that nix-update can't
     >   strip on its own.
+    > - Passes `--custom-dep` for each `passthru.updateCustomDeps` entry so
+    >   packages with additional source archives update their hashes too.
   */
   perSystem =
     {
@@ -78,6 +80,7 @@
             # update to a newer pre-release without an explicit flag.
             isPrerelease = builtins.match ".*(alpha|beta|canary|m[0-9]+|nightly|prerelease|preview|rc).*" version != null;
             versionRegex = pkg.passthru.updateVersionRegex or null;
+            customDeps = pkg.passthru.updateCustomDeps or [ ];
           in
           if canUpdate then
             {
@@ -91,7 +94,11 @@
               ++ lib.optionals (versionRegex != null) [
                 "--version-regex"
                 versionRegex
-              ];
+              ]
+              ++ lib.concatMap (dep: [
+                "--custom-dep"
+                dep
+              ]) customDeps;
             }
           else
             null
@@ -206,7 +213,9 @@
             [[ "''${#failed[@]}" -gt 0 ]] && echo "failed: ''${#failed[@]}"
           fi
 
-          [[ "''${#failed[@]}" -gt 0 ]] && exit 1
+          if [[ "''${#failed[@]}" -gt 0 ]]; then
+            exit 1
+          fi
         '';
       };
     in

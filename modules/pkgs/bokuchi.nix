@@ -4,13 +4,13 @@
     { pkgs, lib, ... }:
     let
       pname = "bokuchi";
-      version = "1.1.2";
+      version = "1.2.0";
 
       src = pkgs.fetchFromGitHub {
         owner = "Bokuchi-Editor";
         repo = "bokuchi";
         tag = "v${version}";
-        hash = "sha256-9UYASBnFB4Y4r40NPhOu200W7ZztMQSGWLqmDX/XW38=";
+        hash = "sha256-lKO9I+Voyuif+M7bp17xA94x97WrxX+7Q7wSGefmC4U=";
       };
     in
     {
@@ -22,13 +22,13 @@
         # runs from the root and the tauri hook is pointed at src-tauri/.
         cargoRoot = "src-tauri";
         buildAndTestSubdir = "src-tauri";
-        cargoHash = "sha256-0BT/vVP2bsVQ+9xPa1HLctSUK146lNdVhm+BIgDntlQ=";
+        cargoHash = "sha256-6BimgDg+6pLWLCxkWuux/9cwbmNBdtST4ktwWumtqr4=";
 
         npmDeps = pkgs.fetchNpmDeps {
           inherit src;
           name = "${pname}-${version}-npm-deps";
           fetcherVersion = 2;
-          hash = "sha256-YnvgarCkJ0ADsQ6l0qH0jLE6XhC139rX17QCni/3Edw=";
+          hash = "sha256-dZ6SpapQKinajDnQbltM8Qc9YYzQjMZnnChUYTy+w8Y=";
         };
 
         # The upstream config emits Tauri updater artifacts, which abort the

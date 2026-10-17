@@ -5,11 +5,10 @@
     let
       pname = "luapack";
       version = "0.1.1";
-      src = pkgs.fetchFromGitHub {
-        owner = "the-unnamed-goose";
-        repo = pname;
+      src = pkgs.fetchgit {
+        url = "https://git.0x04.cc/alaestor/fork-luapack";
         rev = "v${version}";
-        hash = "sha256-WDBIF7eiRUdmhWYZG4Gbi1p0p6d5CYHVbXTFRbofpWM=";
+        hash = "sha256-i3McLeW66JpLrQbSLgHo2Xt68G0U32vb9uTsHyXnaO0=";
       };
     in
     {
@@ -20,7 +19,7 @@
 
         meta = with pkgs.lib; {
           description = "A basic rust application for efficiently bundling Lua scripts into monolithic releases.";
-          homepage = "https://github.com/the-unnamed-goose/luapack";
+          homepage = "https://git.0x04.cc/alaestor/fork-luapack";
           license = licenses.mpl20;
           mainProgram = "luapack";
           platforms = platforms.unix;

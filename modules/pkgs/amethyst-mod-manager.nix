@@ -3,12 +3,12 @@
   perSystem =
     { pkgs, ... }:
     let
-      version = "2.5.3";
+      version = "2.5.4";
       src = pkgs.fetchFromGitHub {
         owner = "ChrisDKN";
         repo = "Amethyst-Mod-Manager";
         tag = "v${version}";
-        hash = "sha256-Y0bpcC0qQSaof2fa9q4Z8kbm4CapVGZScBm/ws0XDQc=";
+        hash = "sha256-woExKlJqONLSGg4BjyZzZg13IxTIonpgENChsryZVLY=";
       };
     in
     {
@@ -19,6 +19,9 @@
           python3 = pkgs.python313;
           meson = pkgs.meson.override { python3 = pkgs.python313; };
         }).overrideAttrs (old: {
+          # Keep nix-update's attribute positions in this repository.
+          inherit src version;
+
           # KDE's Union style crashes during QApplication initialization.
           # Use Qt's built-in style instead of loading the desktop's plugin.
           preFixup = (old.preFixup or "") + ''

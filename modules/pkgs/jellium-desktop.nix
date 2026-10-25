@@ -19,13 +19,13 @@
       };
 
       cefArchive = pkgs.fetchzip {
-        url = "https://cef-builds.spotifycdn.com/cef_binary_151.3.16+gbe1e15d+chromium-151.0.7922.109_linux64_minimal.tar.bz2";
-        hash = "sha256-UJWYYHh+hEFyn0CbYYY24t0wZmheAtnwwEFheIKcdnM=";
-        stripRoot = false;
+        url = "https://cef-builds.spotifycdn.com/cef_binary_152.0.8+g1ce985c+chromium-152.0.7977.134_linux64_minimal.tar.bz2";
+        hash = "sha256-djoHb9jRWG+RPNkW/0oaYPf+4ReaI7kXzPL1HKfJNh0=";
+        stripRoot = true;
       };
 
-      cef = pkgs.runCommand "jellium-cef-151.3.16" { } ''
-        sdk=${cefArchive}/cef_binary_151.3.16+gbe1e15d+chromium-151.0.7922.109_linux64_minimal
+      cef = pkgs.runCommand "jellium-cef-152.0.8" { } ''
+        sdk=${cefArchive}
         mkdir $out
         ln -s $sdk/Release/* $out
         ln -s $sdk/Resources/* $out
@@ -33,7 +33,7 @@
         ln -s $sdk/cmake $out/cmake
         ln -s $sdk/libcef_dll $out/libcef_dll
         cat >$out/archive.json <<'EOF'
-        {"type":"minimal","name":"cef_binary_151.3.16+gbe1e15d+chromium-151.0.7922.109_linux64_minimal","sha1":"13042a73aeaf0e853a719d3ddad0751514665bb9"}
+        {"type":"minimal","name":"cef_binary_152.0.8+g1ce985c+chromium-152.0.7977.134_linux64_minimal","sha1":"25798f5f87b9cc699311c9abae73f4ef0f56ea76"}
         EOF
       '';
 
@@ -49,6 +49,7 @@
       });
 
       cefRuntimeLibraries = with pkgs; [
+        alsa-lib
         at-spi2-atk
         atk
         cairo
@@ -57,8 +58,15 @@
         expat
         glib
         libGL
+        libgbm
+        libx11
+        libxcb
         libxcomposite
         libxdamage
+        libxext
+        libxfixes
+        libxkbcommon
+        libxrandr
         nspr
         nss
         pango
@@ -79,6 +87,7 @@
         doCheck = false;
 
         nativeBuildInputs = [
+          pkgs.python3
           pkgs.makeWrapper
           pkgs.pkg-config
           pkgs.rustPlatform.bindgenHook
@@ -97,6 +106,44 @@
         JFN_GIT_HASH = "28f2cf1";
         JFN_GIT_DIRTY = "0";
         NIX_LDFLAGS = "--allow-shlib-undefined";
+
+        # Validate the actual vendored bindings even with GUI tests disabled.
+        preBuild = ''
+          LD_LIBRARY_PATH="${lib.makeLibraryPath cefRuntimeLibraries}:$LD_LIBRARY_PATH" python3 <<'PYCEF'
+          import ctypes
+          import json
+          import pathlib
+          import re
+          import subprocess
+
+          metadata = json.loads(subprocess.check_output([
+              "cargo", "metadata", "--offline", "--locked", "--format-version", "1",
+              "--manifest-path", "src/Cargo.toml",
+          ]))
+          package, = [p for p in metadata["packages"] if p["name"] == "cef-dll-sys"]
+          bindings = (pathlib.Path(package["manifest_path"]).parent /
+                      "src/bindings/x86_64_unknown_linux_gnu.rs").read_text()
+          api = int(re.search(r"pub const CEF_API_VERSION_LAST: i32 = (\d+);", bindings)[1])
+          required = re.search(r'pub const CEF_VERSION:.*?= b"(.*?)\\0";', bindings)[1]
+          header = pathlib.Path("${cef}/include/cef_version.h").read_text()
+          bundled = re.search(r'#define CEF_VERSION "(.*?)"', header)[1]
+          if required != bundled:
+              raise SystemExit(f"CEF SDK mismatch: bindings require {required}, bundled {bundled}")
+          cef = ctypes.CDLL("${cef}/libcef.so")
+          cef.cef_api_hash.argtypes = [ctypes.c_int, ctypes.c_int]
+          cef.cef_api_hash.restype = ctypes.c_char_p
+          actual_hash = cef.cef_api_hash(api, 0)
+          if not actual_hash:
+              raise SystemExit(f"Bundled libcef does not support bindings API {api}")
+          hashes = pathlib.Path("${cef}/include/cef_api_versions.h").read_text()
+          expected_hash = re.search(
+              rf'#elif defined\(OS_LINUX\)\s+#define CEF_API_HASH_{api} "(.*?)"', hashes,
+          )[1].encode()
+          if actual_hash != expected_hash:
+              raise SystemExit(f"Bundled libcef API {api} hash differs from SDK headers")
+          print(f"CEF SDK check passed: {bundled}, API {api}")
+          PYCEF
+        '';
 
         postInstall = ''
           install -Dm755 \

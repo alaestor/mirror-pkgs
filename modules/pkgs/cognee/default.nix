@@ -26,19 +26,19 @@
       ...
     }:
     let
-      version = "1.6.5.dev0";
+      version = "1.6.6";
       src = pkgs.fetchFromGitHub {
         owner = "topoteretes";
         repo = "cognee";
         tag = "v${version}";
-        hash = "sha256-Zw9YIz9odIhadQ6rUW+DWPkOcYsOUEbPRsTywiZL3y0=";
+        hash = "sha256-qc7zIeyK4Eel/54KmwD3YI9FDGR778DuZYzKTz7WxZ8=";
       };
       workspace = inputs.uv2nix.lib.workspace.loadWorkspace { workspaceRoot = src; };
       # Git does not contain the JSON extension. Release archives bundle it.
       release = pkgs.fetchPypi {
         pname = "cognee";
         inherit version;
-        hash = "sha256-4xNC/BGfomE3QPPdcZKZ7MnP5WOYEEaWMrp99zuO5XA=";
+        hash = "sha256-jQp0n3y7hApnjKOVhwqfpabyVEoTVXWdeAQtgnYOUOc=";
       };
       extensionPlatform = if pkgs.stdenv.hostPlatform.isAarch64 then "linux_arm64" else "linux_amd64";
       pythonSet =

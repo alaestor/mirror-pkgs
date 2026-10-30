@@ -3,12 +3,12 @@
   perSystem =
     { pkgs, ... }:
     let
-      version = "2.5.5";
+      version = "2.6.0";
       src = pkgs.fetchFromGitHub {
         owner = "ChrisDKN";
         repo = "Amethyst-Mod-Manager";
         tag = "v${version}";
-        hash = "sha256-8bUKZ7RsR7X6ZXnU3R1JhbQW/jObBKrjCsNwoQK9+AI=";
+        hash = "sha256-HMXyP3zTt94YUh4gsW/vcJkEmO5RIUKrO7COuM9TzpE=";
       };
     in
     {
